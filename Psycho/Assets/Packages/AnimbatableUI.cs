@@ -4,32 +4,22 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
-
+using System;
 
 [RequireComponent(typeof(CanvasGroup))]
 
-public class UI_Screen : MonoBehaviour
+public class AnimbatableUI : MonoBehaviour
 {
-    [Header("Scrren Events")]
     public UnityEvent OnStart = new UnityEvent();
 
+    [SerializeField]
     private List<TweenSequence> UIElementSequences;
-
-    private void DisableScreen()
-    {
-        gameObject.SetActive(false);
-    }
-
-    private void EnableScreen()
-    {
-        gameObject.SetActive(true);
-    }
 
     public virtual void Start()
     {
-        OnStart.Invoke();
-
         Init();
+
+        OnStart.Invoke();
     }
 
     public virtual void Init()
@@ -49,6 +39,13 @@ public class UI_Screen : MonoBehaviour
 
     public virtual void Play(string sequenceName)
     {
-        UIElementSequences.Find((seq) => seq.sequenceName == sequenceName).BeginSequence();
+        try
+        {
+            UIElementSequences.Find((seq) => seq.sequenceName == sequenceName).BeginSequence();
+        }
+        catch (NullReferenceException nullException)
+        {
+            Debug.Log("Could not play sequence with name: " + sequenceName + " on object " + name);
+        }
     }
 }

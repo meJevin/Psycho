@@ -100,19 +100,18 @@ public class TweenBase : MonoBehaviour {
 		//Override me!
 	}
 
-	public virtual void Completed(){
+	public virtual void Completed()
+    {
+        //Debug.Log(name + " object finished " + MyTweenName + "!");
 
-		//Override me!
 		if(myTweenType == playStyles.PingPongOnce)
 			pingPongCount++;
 
         if (OnTweenCompleted != null)
         {
+            //Debug.Log("Calling tween completed from " + name + "!");
             OnTweenCompleted.Invoke();
         }
-
-        if (TweenCompleted != null)
-			TweenCompleted();
 	}
 	
 	public virtual void Pause(){
