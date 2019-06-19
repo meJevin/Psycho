@@ -13,9 +13,33 @@ public class PhraseGridController : MonoBehaviour
 
     public int amount = 10;
 
+    public List<GameObject> children = new List<GameObject>();
+
+    public int Amount
+    {
+        get
+        {
+            return amount;
+        }
+        
+        set
+        {
+            amount = value;
+
+            Init();
+        }
+    }
+
     void Start()
     {
-        for (int i = 0; i < amount; ++i)
+        Init();
+    }
+
+    public void Init()
+    {
+        ClearChildren();
+
+        for (int i = 0; i < Amount; ++i)
         {
             AddPhraseItem();
         }
@@ -23,17 +47,30 @@ public class PhraseGridController : MonoBehaviour
         ResizeChildren();
     }
 
+    public void ClearChildren()
+    {
+        foreach (GameObject obj in children)
+        {
+            DestroyImmediate(obj);
+        }
+
+        children.Clear();
+    }
+
     public void ResizeChildren()
     {
         Rect rect = GetComponent<RectTransform>().rect;
 
-        GridLayoutGroup.constraintCount = Mathf.CeilToInt((Mathf.Sqrt(amount)));
+        GridLayoutGroup.constraintCount = (int)(Mathf.Sqrt(Amount));
 
-        GridLayoutGroup.cellSize = new Vector2(rect.width / 2 / GridLayoutGroup.constraintCount, rect.width / 2 / GridLayoutGroup.constraintCount);
+        GridLayoutGroup.cellSize = new Vector2((rect.width - GridLayoutGroup.spacing.x * GridLayoutGroup.constraintCount) / GridLayoutGroup.constraintCount,
+            (rect.width - GridLayoutGroup.spacing.x * GridLayoutGroup.constraintCount) / GridLayoutGroup.constraintCount);
     }
 
     public void AddPhraseItem()
     {
-        GameObject objAdded = GameObject.Instantiate(Dummy, Content.transform);
+        GameObject objAdded = Instantiate(Dummy, Content.transform);
+
+        children.Add(objAdded);
     }
 }
