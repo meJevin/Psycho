@@ -61,7 +61,7 @@ public class PhraseGridController : MonoBehaviour
     {
         Rect rect = GetComponent<RectTransform>().rect;
 
-        GridLayoutGroup.constraintCount = (int)(Mathf.Sqrt(Amount));
+        GridLayoutGroup.constraintCount = (int)Mathf.CeilToInt((Mathf.Sqrt(Amount)));
 
         GridLayoutGroup.cellSize = new Vector2((rect.width - GridLayoutGroup.spacing.x * GridLayoutGroup.constraintCount) / GridLayoutGroup.constraintCount,
             (rect.width - GridLayoutGroup.spacing.x * GridLayoutGroup.constraintCount) / GridLayoutGroup.constraintCount);
