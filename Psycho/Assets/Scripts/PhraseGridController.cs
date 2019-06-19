@@ -9,6 +9,8 @@ public class PhraseGridController : MonoBehaviour
 
     public GameObject Content;
 
+    public GridLayoutGroup GridLayoutGroup;
+
     public int amount = 10;
 
     void Start()
@@ -17,6 +19,17 @@ public class PhraseGridController : MonoBehaviour
         {
             AddPhraseItem();
         }
+
+        ResizeChildren();
+    }
+
+    public void ResizeChildren()
+    {
+        Rect rect = GetComponent<RectTransform>().rect;
+
+        GridLayoutGroup.constraintCount = Mathf.CeilToInt((Mathf.Sqrt(amount)));
+
+        GridLayoutGroup.cellSize = new Vector2(rect.width / 2 / GridLayoutGroup.constraintCount, rect.width / 2 / GridLayoutGroup.constraintCount);
     }
 
     public void AddPhraseItem()

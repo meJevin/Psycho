@@ -766,7 +766,7 @@ MonoBehaviour:
   m_StartAxis: 0
   m_CellSize: {x: 50, y: 50}
   m_Spacing: {x: 50, y: 50}
-  m_Constraint: 0
+  m_Constraint: 1
   m_ConstraintCount: 2
 --- !u!1 &290971475
 GameObject:
@@ -7293,7 +7293,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Dummy: {fileID: 1211200481632507661, guid: 4b08235f1cb1f874d92287a390643f53, type: 3}
   Content: {fileID: 253834195}
-  amount: 10
+  GridLayoutGroup: {fileID: 253834198}
+  amount: 14
 --- !u!114 &2043212966
 MonoBehaviour:
   m_ObjectHideFlags: 0
