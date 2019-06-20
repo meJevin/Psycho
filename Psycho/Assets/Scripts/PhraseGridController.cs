@@ -63,8 +63,8 @@ public class PhraseGridController : MonoBehaviour
 
         GridLayoutGroup.constraintCount = (int)Mathf.CeilToInt((Mathf.Sqrt(Amount)));
 
-        GridLayoutGroup.cellSize = new Vector2((rect.width - GridLayoutGroup.spacing.x * GridLayoutGroup.constraintCount) / GridLayoutGroup.constraintCount,
-            (rect.width - GridLayoutGroup.spacing.x * GridLayoutGroup.constraintCount) / GridLayoutGroup.constraintCount);
+        GridLayoutGroup.cellSize = new Vector2((rect.height - GridLayoutGroup.spacing.x * (GridLayoutGroup.constraintCount+1)) / GridLayoutGroup.constraintCount,
+            (rect.height - GridLayoutGroup.spacing.x * (GridLayoutGroup.constraintCount+1)) / GridLayoutGroup.constraintCount);
     }
 
     public void AddPhraseItem()
