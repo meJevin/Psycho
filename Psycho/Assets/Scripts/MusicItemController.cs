@@ -29,10 +29,6 @@ public class MusicItemController : MonoBehaviour
     {
         ClearChildren();
 
-        SizeFitter.horizontalFit = ContentSizeFitter.FitMode.Unconstrained;
-
-        Content.GetComponent<RectTransform>().sizeDelta = new Vector2(0, 0);
-
         MusicListRequester = gameObject.AddComponent<WebRequestHandler>();
 
         MusicListRequester.OnRequestSuccessful.AddListener(DownloadMusicFromExistingList);
@@ -56,6 +52,13 @@ public class MusicItemController : MonoBehaviour
         Destroy(context);
     }
 
+    // Убирает SizeFitter и делает по центру детей
+    void RemoveAutoSize()
+    {
+        SizeFitter.horizontalFit = ContentSizeFitter.FitMode.Unconstrained;
+
+        Content.GetComponent<RectTransform>().sizeDelta = new Vector2(0, 0);
+    }
 
     // Из загруженной музяки делает предметы
     void LoadMusicItem(WebRequestHandler context)
@@ -69,15 +72,37 @@ public class MusicItemController : MonoBehaviour
     {
         foreach (GameObject obj in children)
         {
-            DestroyImmediate(obj);
+            RemovePhraseItem(obj);
         }
 
         children.Clear();
     }
 
+    public void RemovePhraseItem(GameObject item)
+    {
+        item.gameObject.SetActive(false);
+        Destroy(item);
+
+        float childrenWidth = ItemsGridLayoutGroup.padding.right + ItemsGridLayoutGroup.padding.left;
+        foreach (var child in children)
+        {
+            // Перед удалением ставлю active на false чтобы понять что объекта больше нет
+            if (child.gameObject.activeSelf)
+            {
+                childrenWidth += child.GetComponent<RectTransform>().rect.width + ItemsGridLayoutGroup.spacing.x;
+            }
+        }
+
+        Debug.Log(childrenWidth);
+        Debug.Log(Content.transform.parent.GetComponent<RectTransform>().rect.width);
+
+        if (childrenWidth < Content.transform.parent.GetComponent<RectTransform>().rect.width)
+        {
+            RemoveAutoSize();
+        }
+    }
     public void AddPhraseItem(AudioClip audio)
     {
-        Debug.Log("Adding");
         GameObject objAdded = Instantiate(Dummy, Content.transform);
         objAdded.GetComponent<AudioSource>().clip = audio;
 
@@ -91,10 +116,7 @@ public class MusicItemController : MonoBehaviour
                 childrenWidth += child.GetComponent<RectTransform>().rect.width + ItemsGridLayoutGroup.spacing.x;
             }
 
-            Debug.Log(childrenWidth);
-            Debug.Log(Content.GetComponent<RectTransform>().rect);
-
-            if (childrenWidth > Content.GetComponent<RectTransform>().rect.width)
+            if (childrenWidth > Content.transform.parent.GetComponent<RectTransform>().rect.width)
             {
                 SizeFitter.horizontalFit = ContentSizeFitter.FitMode.PreferredSize;
             }

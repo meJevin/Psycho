@@ -310,7 +310,6 @@ public class WebRequestHandler : MonoBehaviour
 
         if (requesters.Count == 0 && RequestSuccessful)
         {
-            Debug.Log("Request succesful");
             OnRequestSuccessful.Invoke(this);
         }
     }
