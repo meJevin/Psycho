@@ -11,6 +11,11 @@ using UnityEngine.UI;
 using UnityEngine.Events;
 using UnityEngine.Networking;
 
+[SerializeField]
+public class RequestEvent : UnityEvent<WebRequestHandler>
+{ }
+
+
 public class WebRequestHandler : MonoBehaviour
 {
     public ErrorScreen errorScreen;
@@ -29,8 +34,8 @@ public class WebRequestHandler : MonoBehaviour
     public long responceCode;
 
     [Header("Events")]
-    UnityEvent OnRequestSuccessful = new UnityEvent();
-    UnityEvent OnRequestFailed = new UnityEvent();
+    public RequestEvent OnRequestSuccessful = new RequestEvent();
+    public RequestEvent OnRequestFailed = new RequestEvent();
 
     public bool RequestSuccessful
     {
@@ -56,14 +61,26 @@ public class WebRequestHandler : MonoBehaviour
 
     void Awake()
     {
-        errorScreen = FindObjectOfType<ErrorScreen>();
-        loadingScreen = FindObjectOfType<LoadingScreen>();
+        errorScreen = Resources.FindObjectsOfTypeAll<ErrorScreen>()[0];
+        loadingScreen = Resources.FindObjectsOfTypeAll<LoadingScreen>()[0];
     }
 
-    public void Test()
+    public void TextRequest(string path)
     {
         gameObject.SetActive(true);
-        StartCoroutine(PerformTextRequest(@"https://wasdww.google.com", "GET"));
+        StartCoroutine(PerformTextRequest(path));
+    }
+
+    public void ImageRequest(string path)
+    {
+        gameObject.SetActive(true);
+        StartCoroutine(PerformImageRequest(path));
+    }
+
+    public void AudioRequest(string path)
+    {
+        gameObject.SetActive(true);
+        StartCoroutine(PerformAudioRequest(path));
     }
 
     public void Reset()
@@ -133,17 +150,17 @@ public class WebRequestHandler : MonoBehaviour
                 }
             }
 
-            OnRequestFailed.Invoke();
+            OnRequestFailed.Invoke(this);
             yield break;
         }
 
         if (requesters.Count == 0 && RequestSuccessful)
         {
-            OnRequestSuccessful.Invoke();
+            OnRequestSuccessful.Invoke(this);
         }
     }
 
-    public IEnumerator PerformTextRequest(string path, string method = "POST", string json = null, Action<UnityWebRequest> requestCutomization = null, WWWForm postParams = null)
+    public IEnumerator PerformTextRequest(string path, string method = "GET", string json = null, Action<UnityWebRequest> requestCutomization = null, WWWForm postParams = null)
     {
         Reset();
 
@@ -218,13 +235,13 @@ public class WebRequestHandler : MonoBehaviour
                 }
             }
 
-            OnRequestFailed.Invoke();
+            OnRequestFailed.Invoke(this);
             yield break;
         }
 
         if (requesters.Count == 0 && RequestSuccessful)
         {
-            OnRequestSuccessful.Invoke();
+            OnRequestSuccessful.Invoke(this);
         }
     }
 
@@ -237,14 +254,14 @@ public class WebRequestHandler : MonoBehaviour
         loadingScreen.gameObject.SetActive(true);
         loadingScreen.TieTo(this);
 
-        UnityWebRequest uwr = UnityWebRequestMultimedia.GetAudioClip(path, AudioType.OGGVORBIS);
+        UnityWebRequest uwr = UnityWebRequestMultimedia.GetAudioClip(path, AudioType.MPEG);
 
         if (uwr.error != null)
         {
             errorScreen.ShowMessage(uwr.error);
             gotResponce = true;
 
-            requesters.Remove("Texture");
+            requesters.Remove("Audio");
             yield break;
         }
 
@@ -260,7 +277,7 @@ public class WebRequestHandler : MonoBehaviour
 
         responceCode = uwr.responseCode;
 
-        requesters.Remove("Texture");
+        requesters.Remove("Audio");
 
         if (!(responceCode >= 200 && responceCode < 300))
         {
@@ -287,13 +304,14 @@ public class WebRequestHandler : MonoBehaviour
                 }
             }
 
-            OnRequestFailed.Invoke();
+            OnRequestFailed.Invoke(this);
             yield break;
         }
 
         if (requesters.Count == 0 && RequestSuccessful)
         {
-            OnRequestSuccessful.Invoke();
+            Debug.Log("Request succesful");
+            OnRequestSuccessful.Invoke(this);
         }
     }
 }
