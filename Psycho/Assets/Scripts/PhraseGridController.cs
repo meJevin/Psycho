@@ -5,69 +5,94 @@ using UnityEngine.UI;
 
 public class PhraseGridController : MonoBehaviour
 {
+    [Header("Dummy Object")]
     public GameObject Dummy;
 
+    [Header("Content Control")]
     public GameObject Content;
-
     public GridLayoutGroup ItemsGridLayoutGroup;
 
-    public int amount = 10;
-
-    public List<GameObject> children = new List<GameObject>();
+    public List<GameObject> Children = new List<GameObject>();
 
     public Vector2 MinSize = new Vector2(35, 35);
 
-    public int Amount
-    {
-        get
-        {
-            return amount;
-        }
-        
-        set
-        {
-            amount = value;
+    [Header("Web Request")]
+    public string ListPath;
 
-            Init();
-        }
-    }
+    WebRequestHandler MusicListRequester;
 
-    void Start()
-    {
-    }
+    int DesiredAmount = 13;
 
-    public void ChangeAmount(Slider slider)
-    {
-        Amount = (int)slider.value;
-    }
-
-    public void Init()
+    public void DownloadMusicList()
     {
         ClearChildren();
 
-        for (int i = 0; i < Amount; ++i)
+        MusicListRequester = gameObject.AddComponent<WebRequestHandler>();
+
+        MusicListRequester.OnRequestSuccessful.AddListener(MusicListDownloadSuccess);
+        MusicListRequester.OnRequestFailed.AddListener(MusicListDownloadFail);
+
+        MusicListRequester.TextRequest(ListPath);
+    }
+
+    void MusicListDownloadSuccess(WebRequestHandler context)
+    {
+        AudioButtonItem[] audioButtons = JsonHelper.FromJson<AudioButtonItem>(MusicListRequester.downloadedText);
+
+        for (int i = 0; i < DesiredAmount; ++i)
         {
-            AddPhraseItem();
+            AudioButtonItem audioButton = audioButtons[Random.Range(0, audioButtons.Length - 1)];
+
+            WebRequestHandler temp = gameObject.AddComponent<WebRequestHandler>();
+
+            temp.requesterName = audioButton.caption;
+
+            temp.OnRequestSuccessful.AddListener(MusicItemDownloadSuccess);
+            temp.OnRequestFailed.AddListener(MusicItemDownloadFail);
+
+            temp.AudioRequest(audioButton.audio);
+            temp.ImageRequest(audioButton.bg);
         }
 
-        ResizeChildren();
+        Destroy(context);
+    }
+
+    void MusicListDownloadFail(WebRequestHandler context)
+    {
+        Destroy(context);
+    }
+
+    // Из загруженной музяки делает предметы
+    void MusicItemDownloadSuccess(WebRequestHandler context)
+    {
+        AddPhraseItem(context.downloadedClip, context.downloadedTexture, context.requesterName);
+
+        Destroy(context);
+    }
+
+    // Из загруженной музяки делает предметы
+    void MusicItemDownloadFail(WebRequestHandler context)
+    {
+        Destroy(context);
     }
 
     public void ClearChildren()
     {
-        foreach (GameObject obj in children)
+        foreach (GameObject obj in Children)
         {
             DestroyImmediate(obj);
         }
 
-        children.Clear();
+        Children.Clear();
+
+        ResizeChildren();
     }
 
     public void ResizeChildren()
     {
-        Rect rect = GetComponent<RectTransform>().rect;
+        Rect rect = Content.GetComponent<RectTransform>().rect;
 
-        ItemsGridLayoutGroup.constraintCount = (int)Mathf.CeilToInt((Mathf.Sqrt(Amount)));
+        ItemsGridLayoutGroup.constraintCount = (int)Mathf.CeilToInt((Mathf.Sqrt(Children.Count)));
 
         ItemsGridLayoutGroup.cellSize = new Vector2((rect.height - ItemsGridLayoutGroup.spacing.x * (ItemsGridLayoutGroup.constraintCount + 1)) / ItemsGridLayoutGroup.constraintCount,
             (rect.height - ItemsGridLayoutGroup.spacing.x * (ItemsGridLayoutGroup.constraintCount + 1)) / ItemsGridLayoutGroup.constraintCount);
@@ -81,10 +106,15 @@ public class PhraseGridController : MonoBehaviour
         }
     }
 
-    public void AddPhraseItem()
+    public void AddPhraseItem(AudioClip audio, Texture2D image, string caption)
     {
         GameObject objAdded = Instantiate(Dummy, Content.transform);
+        objAdded.GetComponent<AudioSource>().clip = audio;
+        objAdded.GetComponent<Image>().sprite = Sprite.Create(image, new Rect(0, 0, image.width, image.height), new Vector2(0, 0));
+        objAdded.name = caption;
 
-        children.Add(objAdded);
+        Children.Add(objAdded);
+
+        ResizeChildren();
     }
 }

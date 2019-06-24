@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.37311947, g: 0.38074005, b: 0.35872722, a: 1}
+  m_IndirectSpecularColor: {r: 0.37311992, g: 0.38074034, b: 0.35872713, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -220,7 +220,6 @@ GameObject:
   - component: {fileID: 134934706}
   - component: {fileID: 134934710}
   - component: {fileID: 134934709}
-  - component: {fileID: 134934711}
   - component: {fileID: 134934712}
   - component: {fileID: 134934708}
   m_Layer: 5
@@ -312,8 +311,8 @@ MonoBehaviour:
   OnTweenCompleted:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 134934705}
-        m_MethodName: SetActive
+      - m_Target: {fileID: 0}
+        m_MethodName: SetHiddenState
         m_Mode: 6
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -321,7 +320,7 @@ MonoBehaviour:
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
-          m_BoolArgument: 0
+          m_BoolArgument: 1
         m_CallState: 2
     m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
@@ -353,18 +352,7 @@ MonoBehaviour:
       Culture=neutral, PublicKeyToken=null
   OnEndInit:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 134934709}
-        m_MethodName: Play
-        m_Mode: 5
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: Hide
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
     m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
   UIElementSequences: []
@@ -381,22 +369,6 @@ CanvasGroup:
   m_Interactable: 1
   m_BlocksRaycasts: 1
   m_IgnoreParentGroups: 0
---- !u!114 &134934711
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 134934705}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b468897105943ea44807336ad5d8474e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  messageQueue: []
-  errorText: {fileID: 2132287002}
-  messageCoolDown: 0.4
-  messageCoolDownLeft: 0
 --- !u!114 &134934712
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -458,7 +430,18 @@ MonoBehaviour:
       Culture=neutral, PublicKeyToken=null
   OnTweenCompleted:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 0}
+        m_MethodName: SetHiddenState
+        m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
     m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
   startingVector: {x: 0, y: 0, z: 0}
@@ -754,7 +737,7 @@ MonoBehaviour:
   m_ChildAlignment: 4
   m_StartCorner: 0
   m_StartAxis: 0
-  m_CellSize: {x: 101.25, y: 101.25}
+  m_CellSize: {x: 0, y: 0}
   m_Spacing: {x: 50, y: 50}
   m_Constraint: 1
   m_ConstraintCount: 99
@@ -1054,6 +1037,60 @@ MonoBehaviour:
   SetTransformTo: 0
   useDefaultVector: 0
   defaultVector: {x: 0, y: 0, z: 0}
+--- !u!1 &307342156
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 307342157}
+  - component: {fileID: 307342158}
+  m_Layer: 5
+  m_Name: Phrase Item Controller
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &307342157
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 307342156}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 515627364}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 0}
+  m_SizeDelta: {x: 0, y: 0}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &307342158
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 307342156}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b32ef66eb2ebbe74b915be1d4ff85017, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Dummy: {fileID: 1211200481632507661, guid: 4b08235f1cb1f874d92287a390643f53, type: 3}
+  Content: {fileID: 253834195}
+  ItemsGridLayoutGroup: {fileID: 253834198}
+  Children: []
+  MinSize: {x: 35, y: 35}
+  ListPath: https://drive.google.com/uc?authuser=0&id=18nszOWjY91CKItnOh8vEQpyz0gB02wrs&export=download
 --- !u!1 &369626923
 GameObject:
   m_ObjectHideFlags: 0
@@ -1506,6 +1543,7 @@ RectTransform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
+  - {fileID: 307342157}
   - {fileID: 1910445616}
   - {fileID: 2043212960}
   m_Father: {fileID: 1200113988}
@@ -2573,10 +2611,8 @@ MonoBehaviour:
   Content: {fileID: 537404205}
   ItemsGridLayoutGroup: {fileID: 537404208}
   SizeFitter: {fileID: 537404207}
-  children: []
-  ListPath: https://drive.google.com/uc?authuser=0&id=1X4EwOkQI1UBK8wR6yFPv1byzDMYCbj4n&export=download
-  DummyMusicItem: {fileID: 1211200481632507661, guid: 4b08235f1cb1f874d92287a390643f53,
-    type: 3}
+  Children: []
+  ListPath: https://drive.google.com/uc?authuser=0&id=18nszOWjY91CKItnOh8vEQpyz0gB02wrs&export=download
 --- !u!224 &943090608
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2594,7 +2630,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 100, y: 100}
+  m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &953687855
 GameObject:
@@ -4633,7 +4669,7 @@ RectTransform:
   m_LocalScale: {x: 0.5, y: 0.5, z: 1}
   m_Children: []
   m_Father: {fileID: 515627364}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -4745,6 +4781,17 @@ MonoBehaviour:
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: Show
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 307342158}
+        m_MethodName: DownloadMusicList
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
     m_TypeName: UnityEngine.UI.Button+ButtonClickedEvent, UnityEngine.UI, Version=1.0.0.0,
@@ -5536,7 +5583,6 @@ GameObject:
   - component: {fileID: 2043212962}
   - component: {fileID: 2043212961}
   - component: {fileID: 2043212964}
-  - component: {fileID: 2043212965}
   - component: {fileID: 2043212966}
   m_Layer: 5
   m_Name: PhraseItems
@@ -5558,7 +5604,7 @@ RectTransform:
   m_Children:
   - {fileID: 1976653639}
   m_Father: {fileID: 515627364}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -5725,24 +5771,6 @@ MonoBehaviour:
   SetTransformTo: 0
   useDefaultVector: 0
   defaultVector: {x: 0, y: 0, z: 0}
---- !u!114 &2043212965
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2043212959}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b32ef66eb2ebbe74b915be1d4ff85017, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Dummy: {fileID: 1211200481632507661, guid: 4b08235f1cb1f874d92287a390643f53, type: 3}
-  Content: {fileID: 253834195}
-  ItemsGridLayoutGroup: {fileID: 253834198}
-  amount: 10
-  children: []
-  MinSize: {x: 35, y: 35}
 --- !u!114 &2043212966
 MonoBehaviour:
   m_ObjectHideFlags: 0

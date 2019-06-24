@@ -11,14 +11,41 @@ using UnityEngine.UI;
 using UnityEngine.Events;
 using UnityEngine.Networking;
 
+public static class JsonHelper
+{
+    public static T[] FromJson<T>(string json)
+    {
+        Wrapper<T> wrapper = JsonUtility.FromJson<Wrapper<T>>("{ \"Items\": " + json + "}");
+        return wrapper.Items;
+    }
+
+    public static string ToJson<T>(T[] array)
+    {
+        Wrapper<T> wrapper = new Wrapper<T>();
+        wrapper.Items = array;
+        return JsonUtility.ToJson(wrapper);
+    }
+
+    public static string ToJson<T>(T[] array, bool prettyPrint)
+    {
+        Wrapper<T> wrapper = new Wrapper<T>();
+        wrapper.Items = array;
+        return JsonUtility.ToJson(wrapper, prettyPrint);
+    }
+
+    [Serializable]
+    private class Wrapper<T>
+    {
+        public T[] Items;
+    }
+}
+
 [SerializeField]
 public class RequestEvent : UnityEvent<WebRequestHandler>
 { }
 
-
 public class WebRequestHandler : MonoBehaviour
 {
-    public ErrorScreen errorScreen;
     public LoadingScreen loadingScreen;
 
     [Header("Info")]
@@ -61,7 +88,7 @@ public class WebRequestHandler : MonoBehaviour
 
     void Awake()
     {
-        errorScreen = Resources.FindObjectsOfTypeAll<ErrorScreen>()[0];
+        //errorScreen = Resources.FindObjectsOfTypeAll<ErrorScreen>()[0];
         loadingScreen = Resources.FindObjectsOfTypeAll<LoadingScreen>()[0];
     }
 
@@ -105,7 +132,7 @@ public class WebRequestHandler : MonoBehaviour
 
         if (uwr.error != null)
         {
-            errorScreen.ShowMessage(uwr.error);
+            //errorScreen.ShowMessage(uwr.error);
             requesters.Remove("Texture");
             gotResponce = true;
             yield break;
@@ -131,11 +158,11 @@ public class WebRequestHandler : MonoBehaviour
             {
                 if (uwr.isNetworkError)
                 {
-                    errorScreen.ShowMessage(uwr.error);
+                    //errorScreen.ShowMessage(uwr.error);
                 }
                 else
                 {
-                    errorScreen.ShowMessage("Please check your internet connection");
+                    //errorScreen.ShowMessage("Please check your internet connection");
                 }
             }
             else
@@ -146,7 +173,7 @@ public class WebRequestHandler : MonoBehaviour
                 if (title.Count == 1)
                 {
                     string errorTitle = title[0].Split(new char[] { ':' }, StringSplitOptions.RemoveEmptyEntries)[1].Replace("\"", "");
-                    errorScreen.ShowMessage(errorTitle);
+                    //errorScreen.ShowMessage(errorTitle);
                 }
             }
 
@@ -179,7 +206,7 @@ public class WebRequestHandler : MonoBehaviour
 
         if (uwr.error != null)
         {
-            errorScreen.ShowMessage(uwr.error);
+            //errorScreen.ShowMessage(uwr.error);
             gotResponce = true;
 
             requesters.Remove("Text");
@@ -215,11 +242,11 @@ public class WebRequestHandler : MonoBehaviour
             {
                 if (uwr.isNetworkError)
                 {
-                    errorScreen.ShowMessage(uwr.error);
+                    //errorScreen.ShowMessage(uwr.error);
                 }
                 else
                 {
-                    errorScreen.ShowMessage("Please check your internet connection");
+                    //errorScreen.ShowMessage("Please check your internet connection");
                 }
             }
             else
@@ -230,7 +257,7 @@ public class WebRequestHandler : MonoBehaviour
                 {
                     Debug.Log(title[0]);
                     string errorTitle = title[0].Split(new char[] { ':' }, StringSplitOptions.RemoveEmptyEntries)[1].Replace("\"", "");
-                    errorScreen.ShowMessage(errorTitle);
+                    //errorScreen.ShowMessage(errorTitle);
                     Debug.Log(errorTitle);
                 }
             }
@@ -258,7 +285,7 @@ public class WebRequestHandler : MonoBehaviour
 
         if (uwr.error != null)
         {
-            errorScreen.ShowMessage(uwr.error);
+            //errorScreen.ShowMessage(uwr.error);
             gotResponce = true;
 
             requesters.Remove("Audio");
@@ -285,11 +312,11 @@ public class WebRequestHandler : MonoBehaviour
             {
                 if (uwr.isNetworkError)
                 {
-                    errorScreen.ShowMessage(uwr.error);
+                    //errorScreen.ShowMessage(uwr.error);
                 }
                 else
                 {
-                    errorScreen.ShowMessage("Please check your internet connection");
+                    //errorScreen.ShowMessage("Please check your internet connection");
                 }
             }
             else
@@ -300,7 +327,7 @@ public class WebRequestHandler : MonoBehaviour
                 if (title.Count == 1)
                 {
                     string errorTitle = title[0].Split(new char[] { ':' }, StringSplitOptions.RemoveEmptyEntries)[1].Replace("\"", "");
-                    errorScreen.ShowMessage(errorTitle);
+                    //errorScreen.ShowMessage(errorTitle);
                 }
             }
 

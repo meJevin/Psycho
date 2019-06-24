@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.Events;
@@ -10,6 +11,14 @@ using System;
 
 public class AnimatableUI : MonoBehaviour
 {
+    public bool IsAnimating
+    {
+        get
+        {
+            return UIElementSequences.Find((seq) => seq.tweenSequence.ToList().Find((tSeq) => tSeq.isPlaying)) != null;
+        }
+    }
+
     public UnityEvent OnStart = new UnityEvent();
     public UnityEvent OnEndInit = new UnityEvent();
 
@@ -50,6 +59,11 @@ public class AnimatableUI : MonoBehaviour
 
         try
         {
+            if (IsAnimating)
+            {
+                return;
+            }
+
             UIElementSequences.Find((seq) => seq.sequenceName == sequenceName).BeginSequence();
         }
         catch (NullReferenceException nullException)

@@ -5,25 +5,30 @@ using UnityEngine.UI;
 using UnityEngine.UI.Extensions;
 using System;
 
+[Serializable]
+public class AudioButtonItem
+{
+   public string audio;
+   public string bg;
+   public string caption;
+}
+
 public class MusicItemController : MonoBehaviour
 {
+    [Header("Dummy Object")]
     public GameObject Dummy;
 
+    [Header("Content Control")]
     public GameObject Content;
-
     public GridLayoutGroup ItemsGridLayoutGroup;
     public ContentSizeFitter SizeFitter;
 
-    public List<GameObject> children = new List<GameObject>();
+    public List<GameObject> Children = new List<GameObject>();
 
+    [Header("Web Request")]
     public string ListPath;
-    public GameObject DummyMusicItem;
 
     WebRequestHandler MusicListRequester;
-
-    void Start()
-    {
-    }
 
     public void DownloadMusicList()
     {
@@ -31,24 +36,49 @@ public class MusicItemController : MonoBehaviour
 
         MusicListRequester = gameObject.AddComponent<WebRequestHandler>();
 
-        MusicListRequester.OnRequestSuccessful.AddListener(DownloadMusicFromExistingList);
+        MusicListRequester.OnRequestSuccessful.AddListener(MusicListDownloadSuccess);
+        MusicListRequester.OnRequestFailed.AddListener(MusicListDownloadFail);
 
         MusicListRequester.TextRequest(ListPath);
     }
 
-    void DownloadMusicFromExistingList(WebRequestHandler context)
+    void MusicListDownloadSuccess(WebRequestHandler context)
     {
-        string listText = MusicListRequester.downloadedText;
+        AudioButtonItem[] audioButtons = JsonHelper.FromJson<AudioButtonItem>(MusicListRequester.downloadedText);
 
-        string[] musicLinks = listText.Split(new char[] { '\n' }, StringSplitOptions.RemoveEmptyEntries);
-
-        foreach (string link in musicLinks)
+        foreach (AudioButtonItem audioButton in audioButtons)
         {
             WebRequestHandler temp = gameObject.AddComponent<WebRequestHandler>();
-            temp.OnRequestSuccessful.AddListener(LoadMusicItem);
-            temp.AudioRequest(link);
+
+            temp.requesterName = audioButton.caption;
+
+            temp.OnRequestSuccessful.AddListener(MusicItemDownloadSuccess);
+            temp.OnRequestFailed.AddListener(MusicItemDownloadFail);
+
+            temp.AudioRequest(audioButton.audio);
+            temp.ImageRequest(audioButton.bg);
         }
 
+        Destroy(context);
+    }
+
+    void MusicListDownloadFail(WebRequestHandler context)
+    {
+        Destroy(context);
+    }
+
+
+    // Из загруженной музяки делает предметы
+    void MusicItemDownloadSuccess(WebRequestHandler context)
+    {
+        AddMusicItem(context.downloadedClip, context.downloadedTexture, context.requesterName);
+
+        Destroy(context);
+    }
+
+    // Из загруженной музяки делает предметы
+    void MusicItemDownloadFail(WebRequestHandler context)
+    {
         Destroy(context);
     }
 
@@ -60,22 +90,14 @@ public class MusicItemController : MonoBehaviour
         Content.GetComponent<RectTransform>().sizeDelta = new Vector2(0, 0);
     }
 
-    // Из загруженной музяки делает предметы
-    void LoadMusicItem(WebRequestHandler context)
-    {
-        AddPhraseItem(context.downloadedClip);
-
-        Destroy(context);
-    }
-
     public void ClearChildren()
     {
-        foreach (GameObject obj in children)
+        foreach (GameObject obj in Children)
         {
             RemovePhraseItem(obj);
         }
 
-        children.Clear();
+        Children.Clear();
     }
 
     public void RemovePhraseItem(GameObject item)
@@ -84,7 +106,7 @@ public class MusicItemController : MonoBehaviour
         Destroy(item);
 
         float childrenWidth = ItemsGridLayoutGroup.padding.right + ItemsGridLayoutGroup.padding.left;
-        foreach (var child in children)
+        foreach (var child in Children)
         {
             // Перед удалением ставлю active на false чтобы понять что объекта больше нет
             if (child.gameObject.activeSelf)
@@ -93,25 +115,24 @@ public class MusicItemController : MonoBehaviour
             }
         }
 
-        Debug.Log(childrenWidth);
-        Debug.Log(Content.transform.parent.GetComponent<RectTransform>().rect.width);
-
         if (childrenWidth < Content.transform.parent.GetComponent<RectTransform>().rect.width)
         {
             RemoveAutoSize();
         }
     }
-    public void AddPhraseItem(AudioClip audio)
+    public void AddMusicItem(AudioClip audio, Texture2D image, string caption)
     {
         GameObject objAdded = Instantiate(Dummy, Content.transform);
         objAdded.GetComponent<AudioSource>().clip = audio;
+        objAdded.GetComponent<Image>().sprite = Sprite.Create(image, new Rect(0, 0, image.width, image.height), new Vector2(0,0));
+        objAdded.name = caption;
 
-        children.Add(objAdded);
+        Children.Add(objAdded);
 
         if (SizeFitter.horizontalFit != ContentSizeFitter.FitMode.PreferredSize)
         {
             float childrenWidth = ItemsGridLayoutGroup.padding.right + ItemsGridLayoutGroup.padding.left;
-            foreach (var child in children)
+            foreach (var child in Children)
             {
                 childrenWidth += child.GetComponent<RectTransform>().rect.width + ItemsGridLayoutGroup.spacing.x;
             }
