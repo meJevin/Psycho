@@ -90,7 +90,7 @@ public class PhraseGridController : MonoBehaviour
 
     public void ResizeChildren()
     {
-        Rect rect = Content.GetComponent<RectTransform>().rect;
+        Rect rect = Content.transform.parent.gameObject.GetComponent<RectTransform>().rect;
 
         ItemsGridLayoutGroup.constraintCount = (int)Mathf.CeilToInt((Mathf.Sqrt(Children.Count)));
 
